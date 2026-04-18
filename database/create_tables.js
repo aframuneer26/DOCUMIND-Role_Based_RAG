@@ -5,7 +5,7 @@ const { Pool } = require('pg');
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT) || 5432,
-  database: process.env.DB_NAME || 'rag_db',
+  database: process.env.DB_NAME || 'RagAdv',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Afra@2005',
 });
@@ -106,7 +106,7 @@ async function createTables() {
       SELECT table_name FROM information_schema.tables
       WHERE table_schema = 'public' ORDER BY table_name
     `);
-    console.log('\n📋 Tables in rag_db:');
+    console.log('\n📋 Tables in RagAdv:');
     result.rows.forEach(r => console.log('   -', r.table_name));
     console.log('\n🎉 Database setup complete! All tables are ready.');
 

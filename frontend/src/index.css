@@ -67,6 +67,16 @@
   --transition-slow: 0.4s ease;
 }
 
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+}
+
+.pulse {
+  animation: pulse-ring 1.5s infinite;
+}
+
 /* ─── Reset & Base ────────────────────────────────────────────── */
 *, *::before, *::after {
   margin: 0;

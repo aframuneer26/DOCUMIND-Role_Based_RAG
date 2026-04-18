@@ -8,7 +8,7 @@ Write-Host "Project root: $root`n" -ForegroundColor Gray
 
 # 1. Start Python RAG Service (port 8000)
 Write-Host "[1/3] Starting Python RAG Service on port 8000..." -ForegroundColor Yellow
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root'; .\.venv\Scripts\Activate.ps1; cd python_service; python main.py" -WindowStyle Normal
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root'; .\myenv\Scripts\Activate.ps1; cd python_service; python main.py" -WindowStyle Normal
 
 Start-Sleep -Seconds 2
 

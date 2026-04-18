@@ -49,7 +49,7 @@ psql -U postgres -f database/setup.sql
 
 Or manually:
 ```sql
-CREATE DATABASE rag_db;
+CREATE DATABASE "RagAdv";
 ```
 
 ---
@@ -196,7 +196,7 @@ new/
 
 ### Backend (`backend/.env`)
 ```
-DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/rag_db
+DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/RagAdv
 JWT_SECRET=your_super_secret_key_min_32_chars
 JWT_EXPIRES_IN=7d
 PORT=5000
@@ -209,7 +209,7 @@ GEMINI_API_KEY=your_gemini_api_key
 GEMINI_API_KEY=your_gemini_api_key
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=rag_db
+DB_NAME=RagAdv
 DB_USER=postgres
 DB_PASSWORD=yourpassword
 FAISS_INDEX_DIR=./faiss_indexes

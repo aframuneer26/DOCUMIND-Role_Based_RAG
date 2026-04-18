@@ -1,9 +1,9 @@
 -- Run this in psql to create the database
 -- psql -U postgres -f setup.sql
 
-CREATE DATABASE rag_db;
+CREATE DATABASE "RagAdv";
 
-\c rag_db;
+\c "RagAdv";
 
 -- Enable UUID generation
 CREATE EXTENSION IF NOT EXISTS pgcrypto;

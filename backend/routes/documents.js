@@ -36,7 +36,7 @@ const upload = multer({
 // Helper to extract a useful error message from axios errors
 const getErrMsg = (err) => {
   if (err.code === 'ECONNREFUSED') {
-    return 'Python RAG service is not running. Please start it on port 8000.';
+    return 'Python RAG service is not running. Please start it on port 8001.';
   }
   if (err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
     return 'Python RAG service timed out. The document may be too large or the service is overloaded.';
@@ -65,7 +65,7 @@ router.post('/upload', authenticate, requireAdmin, upload.single('document'), as
     // Clean up temp file
     if (req.file?.path && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
     return res.status(503).json({
-      error: 'Python RAG service is not running. Please start the python_service (port 8000) before uploading documents.'
+      error: 'Python RAG service is not running. Please start the python_service (port 8001) before uploading documents.'
     });
   }
 

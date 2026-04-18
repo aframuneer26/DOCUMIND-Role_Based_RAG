@@ -94,7 +94,11 @@ router.post('/ask', authenticate, async (req, res) => {
     if (err.code === 'ECONNREFUSED') {
       return res.status(503).json({ error: 'RAG service is unavailable. Please try again.' });
     }
-    res.status(500).json({ error: 'Failed to process query: ' + err.message });
+    const upstreamDetail = err.response?.data?.detail || err.response?.data?.error;
+    const message = upstreamDetail
+      ? `Failed to process query: ${upstreamDetail}`
+      : `Failed to process query: ${err.message}`;
+    res.status(500).json({ error: message });
   }
 });
 

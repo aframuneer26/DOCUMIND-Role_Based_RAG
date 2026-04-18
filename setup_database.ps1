@@ -15,18 +15,18 @@ $PG_PASSWORD = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 
 $env:PGPASSWORD = $PG_PASSWORD
 
-Write-Host "`n[1/3] Creating database 'rag_db'..." -ForegroundColor Cyan
-& $PSQL -U $PG_USER -c "CREATE DATABASE rag_db;" 2>&1
+Write-Host "`n[1/3] Creating database 'RagAdv'..." -ForegroundColor Cyan
+& $PSQL -U $PG_USER -c "CREATE DATABASE \"RagAdv\";" 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Host "  Database may already exist, continuing..." -ForegroundColor Yellow
 }
 
 Write-Host "`n[2/3] Running schema setup..." -ForegroundColor Cyan
-& $PSQL -U $PG_USER -d rag_db -f "database\setup.sql" 2>&1
+& $PSQL -U $PG_USER -d RagAdv -f "database\setup.sql" 2>&1
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`n[3/3] Verifying tables..." -ForegroundColor Cyan
-    & $PSQL -U $PG_USER -d rag_db -c "\dt" 2>&1
+    & $PSQL -U $PG_USER -d RagAdv -c "\dt" 2>&1
 
     Write-Host "`n=== SUCCESS! Database setup complete ===" -ForegroundColor Green
     Write-Host "Tables created: users, documents, document_access, document_chunks, query_logs" -ForegroundColor Gray

@@ -32,17 +32,17 @@ const AdminOverview = () => {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title">Admin Dashboard</h1>
-        <p className="page-subtitle">System overview and management</p>
+        <h1 className="page-title">Command Center</h1>
+        <p className="page-subtitle">Infrastructure and knowledge management</p>
       </div>
       <div className="page-body">
         <div className="stats-grid">
           {[
-            { label: 'Total Users', value: stats?.total_users ?? 0, sub: `${stats?.admins ?? 0} admins` },
-            { label: 'Regular Users', value: stats?.regular_users ?? 0, sub: 'active accounts' },
-            { label: 'Documents', value: stats?.total_documents ?? 0, sub: 'in knowledge base' },
-            { label: 'Total Chunks', value: stats?.total_chunks ?? 0, sub: 'vector embeddings' },
-            { label: 'Queries (24h)', value: stats?.queries_last_24h ?? 0, sub: 'in last 24 hours' },
+            { label: 'Total Team Members', value: stats?.total_users ?? 0, sub: `${stats?.admins ?? 0} Admin Accounts` },
+            { label: 'Active Personnel', value: stats?.regular_users ?? 0, sub: 'Verified users' },
+            { label: 'Indexed Documents', value: stats?.total_documents ?? 0, sub: 'Securely stored files' },
+            { label: 'Knowledge Nodes', value: stats?.total_chunks ?? 0, sub: 'Processed semantic parts' },
+            { label: 'Daily Interactions', value: stats?.queries_last_24h ?? 0, sub: 'Searches today' },
           ].map(s => (
             <div key={s.label} className="stat-card">
               <div className="stat-card__label">{s.label}</div>
@@ -50,15 +50,6 @@ const AdminOverview = () => {
               <div className="stat-card__sub">{s.sub}</div>
             </div>
           ))}
-        </div>
-
-        <div className="card" style={{ marginTop: '8px' }}>
-          <h3 style={{ color: 'var(--white-50)', marginBottom: '8px', fontSize: '1rem' }}>
-            Quick Actions
-          </h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--white-600)' }}>
-            Use the sidebar to navigate to Documents (upload & manage access), Users (manage accounts), and Analytics.
-          </p>
         </div>
       </div>
     </div>

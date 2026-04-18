@@ -59,31 +59,10 @@ export default function AuthPage() {
         </div>
 
         <h1 className="auth-headline">
-          Intelligent<br />
-          <span>Document</span><br />
-          Intelligence
+          Welcome to<br />
+          <span>DocuMind</span>
         </h1>
 
-        <p className="auth-sub">
-          Enterprise-grade RAG system with role-based access control, 
-          semantic search, and AI-powered answers.
-        </p>
-
-        <div className="auth-features">
-          {[
-            { icon: Shield, text: 'Role-based access control' },
-            { icon: FileSearch, text: 'FAISS semantic vector search' },
-            { icon: Zap, text: 'Powered by Google Gemini AI' },
-            { icon: Lock, text: 'JWT secured authentication' },
-          ].map(({ icon: Icon, text }) => (
-            <div key={text} className="auth-feature">
-              <div className="auth-feature-icon">
-                <Icon size={14} color="var(--white-400)" />
-              </div>
-              {text}
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Right Panel */}
@@ -114,7 +93,7 @@ export default function AuthPage() {
           <form className="auth-form" onSubmit={handleSubmit}>
             {/* Role Dropdown */}
             <div className="input-group">
-              <label className="input-label">Role</label>
+              <label className="input-label">Select Account Type</label>
               <div style={{ position: 'relative' }}>
                 <select
                   className="input select"
@@ -122,22 +101,9 @@ export default function AuthPage() {
                   onChange={e => setRole(e.target.value)}
                   id="role-select"
                 >
-                  {ROLES.map(r => (
-                    <option key={r.value} value={r.value}>{r.label} — {r.desc}</option>
-                  ))}
+                  <option value="user">User</option>
+                  <option value="admin">Administrator</option>
                 </select>
-              </div>
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                padding: '8px 12px',
-                background: 'var(--black-850)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-md)',
-                fontSize: '0.75rem',
-                color: 'var(--white-600)'
-              }}>
-                {selectedRole && <selectedRole.icon size={13} />}
-                {selectedRole?.desc}
               </div>
             </div>
 

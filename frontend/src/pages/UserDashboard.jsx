@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 import api from '../lib/api';
 import {
   MessageSquare, Home, History, Send, Brain,
-  FileText, AlertCircle, Clock, ChevronDown, Loader2
+  FileText, AlertCircle, Clock, ChevronDown, Loader2,
+  Mic, MicOff, Volume2, VolumeX
 } from 'lucide-react';
 
 // ─── Chat Interface ────────────────────────────────────────────────────────
@@ -18,6 +19,9 @@ export const ChatPage = ({ user }) => {
   const [documents, setDocuments] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [showDocFilter, setShowDocFilter] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
+  const recognitionRef = useRef(null);
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -31,12 +35,20 @@ export const ChatPage = ({ user }) => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || loading) return;
+  const speakText = (text) => {
+    if (!ttsEnabled || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    let cleanText = text.replace(/[*#_`]/g, '').replace(/\[.*?\]\((.*?)\)/g, '$1');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+  };
 
-    const question = input.trim();
+  const handleSendText = async (textToUse) => {
+    const question = textToUse.trim();
+    if (!question || loading) return;
+
     setInput('');
-
     setMessages(prev => [...prev, { type: 'user', content: question }]);
     setLoading(true);
 
@@ -52,13 +64,59 @@ export const ChatPage = ({ user }) => {
         sources: res.data.sources,
         responseTime: res.data.response_time_ms
       }]);
+      speakText(res.data.answer);
     } catch (err) {
       const errMsg = err.response?.data?.error || 'Failed to get an answer. Please try again.';
       setMessages(prev => [...prev, { type: 'error', content: errMsg }]);
       toast.error(errMsg);
+      speakText("Sorry, I encountered an error finding the answer.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSend = () => handleSendText(input);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        toast.error("Speech recognition is not supported in this browser.");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        handleSendText(transcript);
+      };
+
+      recognition.onerror = (e) => {
+        setIsListening(false);
+        toast.error("Speech recognition error: " + e.error);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.start();
+      setIsListening(true);
+      recognitionRef.current = recognition;
+    }
+  };
+
+  const toggleTts = () => {
+    if (ttsEnabled) {
+      window.speechSynthesis.cancel();
+    }
+    setTtsEnabled(!ttsEnabled);
   };
 
   const handleKeyDown = (e) => {
@@ -88,6 +146,14 @@ export const ChatPage = ({ user }) => {
               <FileText size={14} />
               {selectedDocs.length > 0 ? `${selectedDocs.length} doc${selectedDocs.length > 1 ? 's' : ''}` : 'All Documents'}
               <ChevronDown size={12} />
+            </button>
+            <button
+              className="btn btn--ghost btn--sm"
+              onClick={toggleTts}
+              title={ttsEnabled ? "Disable Voice Reply" : "Enable Voice Reply"}
+              style={{ marginLeft: '8px' }}
+            >
+              {ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
             </button>
             {showDocFilter && (
               <div style={{
@@ -277,6 +343,14 @@ export const ChatPage = ({ user }) => {
             style={{ padding: '13px 18px', flexShrink: 0 }}
           >
             {loading ? <Loader2 size={18} className="spin" /> : <Send size={18} />}
+          </button>
+          <button
+            className={`btn ${isListening ? 'btn--danger pulse' : 'btn--primary'}`}
+            onClick={toggleListening}
+            style={{ padding: '13px 18px', flexShrink: 0, marginLeft: '8px' }}
+            title={isListening ? "Stop Listening" : "Start Voice Input"}
+          >
+            {isListening ? <MicOff size={18} /> : <Mic size={18} />}
           </button>
         </div>
         <p style={{ fontSize: '0.7rem', color: 'var(--white-700)', marginTop: '8px', textAlign: 'center' }}>
